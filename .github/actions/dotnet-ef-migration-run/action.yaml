@@ -1,0 +1,118 @@
+name: dotnet-ef-migration-run
+description: Run migration bundle and execute SQL scripts
+inputs:
+  working-directory:
+    description: Directory path of solution root
+    required: true
+  sql-scripts-path:
+    description: Directory path inside working directory of SQL scripts
+    required: false
+  migration-name:
+    required: true
+    description: Name of the migration artifact to be downloaded from GitHub
+  client-id:
+    required: true
+    description: Azure client id
+  subscription-id:
+    required: true
+    description: Azure subscription id
+  tenant-id:
+    required: true
+    description: Azure tenant id
+  resource-group:
+    description: The resource group that contains the postgres server
+    required: true
+  pgsql-server:
+    description: The postgres server name
+    required: true
+  pgsql-database:
+    description: The postgres database name
+    required: true
+  pg-admin:
+    description: The postgres admin username
+    required: true
+  application-identity:
+    description: The application identity name to be used in SQL scripts
+    required: true
+  github-token:
+    required: false
+    description: GitHub Token
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+  - name: Setup .NET
+    uses: actions/setup-dotnet@v4
+    with:
+      dotnet-version: |
+        9.0.x
+
+  - name: .NET Restore Dependencies
+    shell: bash
+    run: |
+      dotnet nuget list source
+      if dotnet nuget list source | grep -q "GitHub"; then
+        dotnet nuget update source GitHub -u ${{ github.actor }} -p ${{ inputs.github-token }} --store-password-in-clear-text
+      fi
+      dotnet restore
+    working-directory: ${{ inputs.working-directory }}
+
+  - name: .NET Tool Restore
+    shell: bash
+    run: dotnet tool restore
+    working-directory: ${{ inputs.working-directory }}
+
+  - name: Get Runner IP
+    shell: bash
+    run: echo "RUNNER_IP=$(curl -s https://api.ipify.org)" >> $GITHUB_ENV
+
+  - name: Download Migration Bundle
+    uses: actions/download-artifact@v4
+    with:
+      name: ${{ inputs.migration-name }}
+      path: ${{ inputs.working-directory }}
+
+  - name: Login To Azure
+    uses: azure/login@v2
+    with:
+      client-id: ${{ inputs.client-id }}
+      tenant-id: ${{ inputs.tenant-id }}
+      subscription-id: ${{ inputs.subscription-id }}
+
+  - name: Generate connection string
+    shell: bash
+    run: |
+      PGSQL_ACCESS_TOKEN=$(az account get-access-token --resource-type oss-rdbms --query accessToken --output tsv)
+      echo "::add-mask::$PGSQL_ACCESS_TOKEN"
+      echo CONNECTION_STRING="Server=${{ inputs.pgsql-server }}.postgres.database.azure.com;Database=${{ inputs.pgsql-database }};Port=5432;User Id=${{ inputs.pg-admin }};Password=$PGSQL_ACCESS_TOKEN;Ssl Mode=VerifyFull;Command Timeout=180" >> $GITHUB_ENV
+      echo PSQL_CONNECTION_STRING="psql \"host=${{ inputs.pgsql-server }}.postgres.database.azure.com dbname=${{ inputs.pgsql-database }} port=5432 user=${{ inputs.pg-admin }} password=$PGSQL_ACCESS_TOKEN sslmode=require\"" >> $GITHUB_ENV
+
+  - name: Create Runner Firewall Rule
+    shell: bash
+    run: |
+      az postgres flexible-server firewall-rule create --name ${{ inputs.pgsql-server }} --resource-group ${{ inputs.resource-group }} --rule-name "GitHubRunner-${{ github.run_id }}" --start-ip-address "${{ env.RUNNER_IP }}"
+
+  - name: Run Migration Bundle
+    id: apply-bundle
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    run: |
+      chmod +x ./${{ inputs.migration-name }}.exe
+      ./${{ inputs.migration-name }}.exe -v  --connection "${{ env.CONNECTION_STRING }}"
+
+  - name: Execute SQL scripts
+    if: inputs.sql-scripts-path != ''
+    uses: azure/postgresql@v1
+    with:
+      server-name: ${{ inputs.pgsql-server }}
+      connection-string: ${{ env.PSQL_CONNECTION_STRING }}
+      plsql-file: ${{ inputs.working-directory }}/${{ inputs.sql-scripts-path }}/*.sql
+      arguments: -v role_name='${{ inputs.application-identity }}'
+
+  - name: Remove Runner Firewall Rule
+    if: success() || steps.apply-bundle.conclusion == 'failure'
+    shell: bash
+    run: az postgres flexible-server firewall-rule delete --name ${{ inputs.pgsql-server }} --resource-group ${{ inputs.resource-group }} --rule-name "GitHubRunner-${{ github.run_id }}" -y

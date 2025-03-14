@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" />
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="LazyCache.AspNetCore" />
+		<PackageReference Include="Microsoft.Extensions.Azure" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\JoyJourney.Data\JoyJourney.Data.csproj" />
+	</ItemGroup>
+
+</Project>

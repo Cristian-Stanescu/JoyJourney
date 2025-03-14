@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\JoyJourney.ServiceDefaults\JoyJourney.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\JoyJourney.Shared\JoyJourney.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" />
+  </ItemGroup>
+
+</Project>

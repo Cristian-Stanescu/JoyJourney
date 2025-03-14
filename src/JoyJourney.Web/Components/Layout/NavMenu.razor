@@ -1,0 +1,41 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">JoyJourney</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="journal">
+                <span class="bi bi-book-fill" aria-hidden="true"></span> My Journal
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="insights">
+                <span class="bi bi-list-nested" aria-hidden="true"></span> Insights
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="resources">
+                <span class="bi bi-list-nested" aria-hidden="true"></span> Resources
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="settings">
+                <span class="bi bi-gear-nested" aria-hidden="true"></span> Settings
+            </NavLink>
+        </div>
+    </nav>
+</div>

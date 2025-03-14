@@ -1,0 +1,111 @@
+name: dotnet-deploy-k8s
+description: Deploy docker image to k8s
+inputs:
+  image-names:
+    required: true
+    description: Image names
+  image-tag:
+    required: true
+    description: Image tag
+  kubernetes-cluster-name:
+    required: true
+    description: Kubernetes cluster name
+  kubernetes-namespace:
+    required: true
+    description: Kubernetes namespace
+  kubernetes-template-folder:
+    required: true
+    description: Kubernetes template folder path
+  vault-role-id:
+    required: true
+    description: Vault role id for the HashiCorp Vault
+  vault-role-secret:
+    required: true
+    description: Vault role secret for the HashiCorp Vault
+  ghcr-pull-token:
+    required: true
+    description: GitHub Container Registry pull token, GHCR needs a PAT to pull images
+  watch-status-of-deployment:
+    required: false
+    description: Name of deployment to watch rollout status
+    default: ''
+
+runs:
+  using: composite
+  steps:
+  - name: Install Kubectl
+    uses: azure/setup-kubectl@v4
+
+  - uses: azure/k8s-bake@v3
+    id: bake
+    with:
+      renderEngine: "kustomize"
+      kustomizationPath: ${{ inputs.kubernetes-template-folder }}
+      kubectl-version: "latest"
+
+  - name: Set Kubernetes Context
+    uses: azure/k8s-set-context@v4
+    with:
+      method: service-account
+      k8s-url: ${{ steps.secrets.outputs.server }}
+      k8s-secret: ${{ steps.secrets.outputs.CI_TOKEN_SECRET }}
+
+  - name: Create Image Pull Secret
+    uses: azure/k8s-create-secret@v5
+    with:
+      namespace: ${{ inputs.kubernetes-namespace }}
+      container-registry-url: ghcr.io
+      container-registry-username: ${{ github.actor }}
+      container-registry-password: ${{ inputs.ghcr-pull-token }} # GitHub Container Registry pull token, GHCR needs a PAT to pull images
+      secret-name: image-pull-secret
+      # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry
+
+  - name: Fully Qualify Image Names
+    id: fully_qualify_image_names
+    shell: bash
+    run: |
+      # get the input string from action inputs
+      imageNames="${{ inputs.image-names }}"
+
+      # split the input string into an array of lines
+      imageNamesArray=($imageNames)
+
+      # create an empty array to store the qualified image names
+      fullyQualifiedNames=()
+
+      # iterate over each image name in the images array
+      for imageName in "${imageNamesArray[@]}"; do
+        # append the desired text to each line
+        fullyQualifiedImageName="ghcr.io/Cristian-Stanescu/${imageName}:${{ inputs.image-tag }}"
+        # append the fully qualified image name to the new array
+        fullyQualifiedNames+=("${fullyQualifiedImageName}")
+      done
+
+      # join the array of qualified image names into a single string with newline separators
+      outputStr=$(printf "%s\n" "${fullyQualifiedNames[@]}")
+
+      # output the final result
+      echo "${outputStr}"
+      
+      # multi-line output 
+      delimiter="$(openssl rand -hex 8)"
+      echo "images<<${delimiter}" >> "${GITHUB_OUTPUT}"
+      echo "${outputStr}" >> "${GITHUB_OUTPUT}"
+      echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+
+  - name: Deploy to Kubernetes
+    uses: azure/k8s-deploy@v5
+    with:
+      namespace: ${{ inputs.kubernetes-namespace }}
+      manifests: ${{ steps.bake.outputs.manifestsBundle }}
+      images: ${{ steps.fully_qualify_image_names.outputs.images }}
+      pull-images: false
+      strategy: basic
+      action: deploy
+
+  - name: Check deployment status
+    id: check_deployment_status
+    if: ${{ inputs.watch-status-of-deployment != '' }}
+    shell: bash
+    run: |
+      kubectl rollout status ${{ inputs.watch-status-of-deployment }} -w -n "${{ inputs.kubernetes-namespace }}" --timeout=100s

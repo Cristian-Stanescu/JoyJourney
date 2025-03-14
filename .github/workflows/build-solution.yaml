@@ -1,0 +1,81 @@
+name: build-solution
+
+on:
+  pull_request:
+    branches:
+    - main
+    types:
+    - opened
+    - synchronize
+
+concurrency:
+  group: build-solution-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read # required for accessing actions
+  contents: read # required for checking out the repository
+  packages: read # required for reading nuget packages in dotnet restore
+  pull-requests: write # required for commenting on pull requests
+  id-token: write # Needed for authenticating in Azure through OIDC while provisioning terraform
+
+jobs:
+  # check-changes-in-infrastructure:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     files_changed: ${{ steps.check_folder.outputs.files_changed }}
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 0
+  #   - uses: ./.github/actions/change-in-folder
+  #     id: check_folder
+  #     with:
+  #       folders: infrastructure
+
+  # verify-infrastructure:
+  #   environment: dev
+  #   runs-on: ubuntu-latest
+  #   needs: check-changes-in-infrastructure
+  #   if: needs.check-changes-in-infrastructure.outputs.files_changed == 'true'
+  #   env:
+  #     ARM_CLIENT_ID: "${{ vars.AZURE_CLIENT_ID }}"
+  #     ARM_SUBSCRIPTION_ID: "${{ vars.AZURE_SUBSCRIPTION_ID }}"
+  #     ARM_TENANT_ID: "${{ vars.AZURE_TENANT_ID }}"
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - uses: ./.github/actions/terraform-provision
+  #     with:
+  #       working-directory: infrastructure/environments/dev
+
+  check-changes-in-code:
+    runs-on: ubuntu-latest
+    outputs:
+      files_changed: ${{ steps.check_folder.outputs.files_changed }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: ./.github/actions/change-in-folder
+      id: check_folder
+      with:
+        folders: |
+          src
+          test
+
+  verify-solution:
+    runs-on: ubuntu-latest
+    needs: check-changes-in-code
+    if: needs.check-changes-in-code.outputs.files_changed == 'true'
+    steps:
+    - uses: actions/checkout@v4
+    # - name: Build & test solution
+    #   shell: bash
+    #   run: |
+    #     dotnet workload restore
+    #     dotnet test --configuration Release
+    #   working-directory: .
+    - name: Build, test & scan
+      uses: ./.github/actions/dotnet-verify-solution
+      with:
+        working-directory: .

@@ -1,0 +1,45 @@
+name: change-in-folder
+description: | 
+  Checks if any files inside the specified folder(s) have been changed.
+  Requires checking out the repository with fetch-depth: 0
+inputs:
+  folders:
+    required: true
+    description: Path(s) to the folder(s) to be checked for changes
+outputs:
+  files_changed:
+    description: Were any files changed in the input folder(s)
+    value: ${{ steps.check_folders.outputs.files_changed }}
+
+runs:
+  using: composite
+  steps:
+  - name: Determine Changed Folders
+    shell: bash
+    id: check_folders
+    run: |
+      if [ "${{ github.event_name }}" = "push" ]; then
+        BASE_REF=$(git merge-base HEAD^ HEAD)
+      elif [ "${{ github.event_name }}" = "pull_request" ]; then
+        BASE_REF=${{ github.event.pull_request.base.sha }}
+      fi
+
+      CHANGED_FILES=$(git diff --name-only $BASE_REF HEAD)
+      INPUT_FOLDERS="${{ inputs.folders }}"
+      CHANGED=false
+      CHANGED_FOLDERS=""
+      
+      for folder in $INPUT_FOLDERS; do
+        if echo "$CHANGED_FILES" | grep "^$folder"; then
+          CHANGED=true
+          CHANGED_FOLDERS="${CHANGED_FOLDERS}${folder}; "
+        fi
+      done
+
+      echo "files_changed=$CHANGED" >> $GITHUB_OUTPUT
+
+      if [ "$CHANGED" = true ]; then
+        echo "Files changed in input folders: $CHANGED_FOLDERS"
+      else
+        echo "No changes in the input folders."
+      fi

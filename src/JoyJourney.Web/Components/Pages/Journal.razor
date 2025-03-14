@@ -1,0 +1,49 @@
+﻿@page "/journal"
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+
+@using JoyJourney.Shared.Models
+
+@inject JournalApiClient JournalApi
+
+<PageTitle>My Journal</PageTitle>
+
+<h1>Journal</h1>
+
+<p>This component demonstrates showing data loaded from a backend API service.</p>
+
+@if (journalEntries == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in journalEntries)
+            {
+                <tr>
+                    <td>@entry.Title</td>
+                    <td>@entry.CreatedAt.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<JournalEntryDto> journalEntries = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        journalEntries = await JournalApi.GetJournalEntriesAsync();
+    }
+}

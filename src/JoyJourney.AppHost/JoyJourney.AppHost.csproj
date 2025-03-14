@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<Sdk Name="Aspire.AppHost.Sdk" Version="9.1.0" />
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<IsAspireHost>true</IsAspireHost>
+		<UserSecretsId>84bd309f-75aa-487a-a199-248049736bfc</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\JoyJourney.Api\JoyJourney.Api.csproj" />
+		<ProjectReference Include="..\JoyJourney.Web\JoyJourney.Web.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Aspire.Hosting.AppHost" />
+		<PackageReference Include="Aspire.Hosting.PostgreSQL" />
+		<PackageReference Include="Aspire.Hosting.Redis" />
+	</ItemGroup>
+
+</Project>

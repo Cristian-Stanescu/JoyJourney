@@ -1,0 +1,79 @@
+<Project>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+		<AspnetVersion>9.0.2</AspnetVersion>
+		<MicrosoftExtensionsVersion>9.0.3</MicrosoftExtensionsVersion>
+		<MicrosoftExtensionsAIVersion>9.3.0-preview.1.25114.11</MicrosoftExtensionsAIVersion>
+		<AspireVersion>9.1.0</AspireVersion>
+		<AspireUnstablePackagesVersion>9.1.0-preview.1.25121.10</AspireUnstablePackagesVersion>
+		<ApiVersioningVersion>8.1.0</ApiVersioningVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Version together with Aspire -->
+		<PackageVersion Include="Aspire.Hosting.AppHost" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Hosting.Redis" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Npgsql" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.StackExchange.Redis" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.StackExchange.Redis.OutputCaching" Version="$(AspireVersion)" />
+		<PackageVersion Include="Aspire.Azure.AI.OpenAI" Version="$(AspireUnstablePackagesVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.ApiDescription.Server" Version="$(AspnetVersion)">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageVersion>
+		<PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="$(AspireVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="$(AspireVersion)" />
+		<!-- Version together with Asp.Versioning -->
+		<PackageVersion Include="Asp.Versioning.Http" Version="$(ApiVersioningVersion)" />
+		<PackageVersion Include="Asp.Versioning.Http.Client" Version="$(ApiVersioningVersion)" />
+		<PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="$(ApiVersioningVersion)" />
+		<!-- Version together with ASP.NET -->
+		<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.Components.QuickGrid" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.Identity.Stores" Version="$(AspnetVersion)" />
+		<!-- Version together with EF -->
+		<PackageVersion Include="EFCore.NamingConventions" Version="9.0.0" />
+		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(AspnetVersion)" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(AspnetVersion)" />
+		<!-- Version together with runtime -->
+		<PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftExtensionsVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.Options" Version="$(MicrosoftExtensionsVersion)" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
+		<!-- Xabaril packages -->
+		<PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="9.0.0" />
+		<!-- Open Telemetry -->
+		<PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.0" />
+		<PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.11.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.10.1" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.10.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.10.0" />
+		<!-- VS Test -->
+		<PackageVersion Include="Aspire.Hosting.Testing" Version="9.1.0" />
+		<PackageVersion Include="coverlet.collector" Version="6.0.2" />
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageVersion Include="Shouldly" Version="4.2.1" />
+		<PackageVersion Include="xunit" Version="2.9.2" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+		<!-- Miscellaneous -->
+		<PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.3.2" />
+		<PackageVersion Include="LazyCache.AspNetCore" Version="2.4.0" />
+		<PackageVersion Include="FluentValidation" Version="11.10.0" />
+		<PackageVersion Include="FluentValidation.AspNetCore" Version="11.10.0" />
+		<PackageVersion Include="Microsoft.Extensions.Azure" Version="1.7.6" />
+		<PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.3.0" />
+		<PackageVersion Include="Microsoft.Identity.Web" Version="3.2.2" />
+		<PackageVersion Include="Swashbuckle.AspNetCore" Version="6.8.1" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,40 @@
+name: dotnet-verify-solution
+description: An action for building, running unit tests and scanning for a .NET solution
+
+inputs:
+  working-directory:
+    description: Directory path of solution root
+    required: true
+  github-token:
+    required: false
+    description: GitHub Token
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+  - name: .NET Restore dependencies
+    shell: bash
+    run: |
+      dotnet nuget list source
+      if dotnet nuget list source | grep -q "GitHub"; then
+        dotnet nuget update source GitHub -u ${{ github.actor }} -p ${{ inputs.github-token }} --store-password-in-clear-text
+      fi
+      dotnet workload restore
+      dotnet restore
+    working-directory: ${{ inputs.working-directory }}
+
+  # - name: .NET Tool Restore
+  #   shell: bash
+  #   run: dotnet tool restore
+  #   working-directory: ${{ inputs.working-directory }}
+
+  - name: .NET Build
+    shell: bash
+    run: dotnet build --configuration Release --no-restore
+    working-directory: ${{ inputs.working-directory }}
+
+  - name: .NET Test
+    shell: bash
+    run: dotnet test --no-restore --no-build --configuration Release
+    working-directory: ${{ inputs.working-directory }}

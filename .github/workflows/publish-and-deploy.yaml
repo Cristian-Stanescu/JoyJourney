@@ -1,0 +1,189 @@
+name: publish-and-deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: The targeted environment to deploy to (all lower environments will also be deployed to)
+        type: choice
+        required: true
+        options:
+          - dev
+          - preprod
+          - prod
+      deploy:
+        description: Deploy only code to k8s or include also infrastructure and DB migrations
+        type: choice
+        required: true
+        options:
+          - k8s
+          - all
+  push:
+    branches:
+    - master
+
+concurrency:
+  group: publish-and-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read # required for accessing actions and workflow artifacts
+  contents: read # required for checking out the repository
+  packages: write # required for publishing docker images and uploading migration bundle artifacts
+  id-token: write # Needed for applying EF migrations
+
+jobs:
+  check-changes-in-source:
+    runs-on: ubuntu-latest
+    outputs:
+      files_changed: ${{ steps.check_folder.outputs.files_changed }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: ./.github/actions/change-in-folder
+      id: check_folder
+      with:
+        folders: |
+          src
+          kubernetes
+
+  publish-docker-images:
+    runs-on: ubuntu-latest
+    needs: check-changes-in-source
+    if: needs.check-changes-in-source.outputs.files_changed == 'true' || github.event_name == 'workflow_dispatch'
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build and Push Docker image for API
+      uses: ./.github/actions/dotnet-publish-image
+      with:
+        working-directory: src/JoyJourney.Api
+        image-name: api
+
+  check-changes-in-migrations:
+    runs-on: ubuntu-latest
+    outputs:
+      files_changed: ${{ steps.check_folder.outputs.files_changed }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: ./.github/actions/change-in-folder
+      id: check_folder
+      with:
+        folders: src/JoyJourney.Data.Migrations
+
+  build-migration-bundle:
+    runs-on: ubuntu-latest
+    needs: check-changes-in-migrations
+    if: needs.check-changes-in-migrations.outputs.files_changed == 'true' || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'all')
+    steps:
+    - uses: actions/checkout@v4
+    - name: Create Migration Bundle
+      uses: ./.github/actions/dotnet-ef-migration-create
+      with:
+        working-directory: .
+        migration-name: ef-bundle
+        migration-path: src/JoyJourney.Data.Migrations/JoyJourney.Data.Migrations.csproj
+
+  check-changes-in-infrastructure:
+    runs-on: ubuntu-latest
+    outputs:
+      files_changed: ${{ steps.check_folder.outputs.files_changed }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: ./.github/actions/change-in-folder
+      id: check_folder
+      with:
+        folders: infrastructure
+
+  deploy-dev:
+    uses: ./.github/workflows/deploy-environment.yaml
+    if: |
+      always() &&
+      (needs.publish-docker-images.result == 'success' || needs.publish-docker-images.result == 'skipped') &&
+      (needs.build-migration-bundle.result == 'success' || needs.build-migration-bundle.result == 'skipped') &&
+      (needs.check-changes-in-infrastructure.result == 'success' || needs.check-changes-in-infrastructure.result == 'skipped')
+    needs:
+      - publish-docker-images
+      - build-migration-bundle
+      - check-changes-in-infrastructure
+    with:
+      environment: dev
+      deployInfrastructure: ${{ needs.check-changes-in-infrastructure.outputs.files_changed == 'true' || github.event.inputs.deploy == 'all' }}
+      deployMigrations: ${{ needs.build-migration-bundle.result == 'success' }}
+      deployContainers: ${{ needs.publish-docker-images.result == 'success' }}
+    secrets: inherit
+
+  deploy-ppd:
+    uses: ./.github/workflows/deploy-environment.yaml
+    if: |
+      always() &&
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.environment != 'dev') &&
+      (needs.publish-docker-images.result == 'success' || needs.publish-docker-images.result == 'skipped') &&
+      (needs.build-migration-bundle.result == 'success' || needs.build-migration-bundle.result == 'skipped') &&
+      (needs.check-changes-in-infrastructure.result == 'success' || needs.check-changes-in-infrastructure.result == 'skipped') &&
+      (needs.deploy-dev.result == 'success')
+    needs:
+      - deploy-dev
+      - publish-docker-images
+      - build-migration-bundle
+      - check-changes-in-infrastructure
+    with:
+      environment: ppd
+      deployInfrastructure: ${{ needs.check-changes-in-infrastructure.outputs.files_changed == 'true' || github.event.inputs.deploy == 'all' }}
+      deployMigrations: ${{ needs.build-migration-bundle.result == 'success' }}
+      deployContainers: ${{ needs.publish-docker-images.result == 'success' }}
+    secrets: inherit
+
+  run-ppd-integration-tests:
+    name: Run Integration Tests on Pre-Production environment
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ppd
+    if: |
+      always() &&
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.environment != 'dev') &&
+      (needs.deploy-ppd.result == 'success')
+    needs:
+      - deploy-ppd
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login To Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+      - name: Run integration tests
+        run: dotnet run
+        working-directory: integrationtest/JoyJourney.IntegrationTests
+
+  deploy-prod:
+    uses: ./.github/workflows/deploy-environment.yaml
+    if: |
+      always() &&
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'prod') &&
+      (needs.publish-docker-images.result == 'success' || needs.publish-docker-images.result == 'skipped') &&
+      (needs.build-migration-bundle.result == 'success' || needs.build-migration-bundle.result == 'skipped') &&
+      (needs.check-changes-in-infrastructure.result == 'success' || needs.check-changes-in-infrastructure.result == 'skipped') &&
+      (needs.run-ppd-integration-tests.result == 'success') &&
+      github.ref == 'refs/heads/main'
+    needs:
+      - publish-docker-images
+      - build-migration-bundle
+      - check-changes-in-infrastructure
+      - run-ppd-integration-tests
+    with:
+      environment: prod
+      deployInfrastructure: ${{ needs.check-changes-in-infrastructure.outputs.files_changed == 'true' || github.event.inputs.deploy == 'all' }}
+      deployMigrations: ${{ needs.build-migration-bundle.result == 'success' }}
+      deployContainers: ${{ needs.publish-docker-images.result == 'success' }}
+    secrets: inherit

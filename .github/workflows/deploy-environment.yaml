@@ -1,0 +1,113 @@
+name: deploy-environment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      deployInfrastructure:
+        type: boolean
+        description: "If infrastructure should be deployed"
+        default: false
+      deployMigrations:
+        type: boolean
+        description: "If migrations should be deployed"
+        default: false
+      deployContainers:
+        type: boolean
+        description: "If containers should be deployed"
+        default: false
+
+concurrency:
+  group: deploy-environment-${{ github.event.inputs.environment }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read # required for accessing actions and workflow artifacts
+  contents: read # required for checking out the repository
+  packages: read # required for reading nuget packages in dotnet restore and downloading docker images
+  id-token: write # Needed for authenticating in Azure through OIDC while applying EF migrations and provisioning terraform
+
+jobs:
+  automation_inputs:
+    runs-on: ubuntu-latest
+    outputs:
+      k8s_cluster_name: ${{ steps.get_k8s_cluster_name.outputs.k8s_cluster_name }}
+    steps:
+    - name: Get k8s cluster name
+      id: get_k8s_cluster_name
+      env:
+        k8s-cluster-name-dictionary: '{"dev": "svd-dev-westeurope-1", "ppd": "svd-prod-westeurope-1", "prod": "svd-prod-westeurope-1"}'
+      shell: bash
+      run: |
+        export CLUSTER_NAMES='${{ env.k8s-cluster-name-dictionary }}'
+        echo $CLUSTER_NAMES | jq -r '.${{ inputs.environment }}' > value.txt
+        VALUE=$(cat value.txt)
+        if [[ "$VALUE" == "" ]]; then
+          echo "Error: VALUE is empty. Selected environment is invalid!!!"
+          exit 1
+        else
+          echo "Value for ${{ inputs.environment }} is: $VALUE"
+          echo "k8s_cluster_name=$VALUE" >> $GITHUB_OUTPUT
+        fi
+
+  provision-infrastructure:
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    if: inputs.deployInfrastructure
+    env:
+      ARM_CLIENT_ID: "${{ vars.AZURE_CLIENT_ID }}"
+      ARM_SUBSCRIPTION_ID: "${{ vars.AZURE_SUBSCRIPTION_ID }}"
+      ARM_TENANT_ID: "${{ vars.AZURE_TENANT_ID }}"
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/terraform-provision
+      with:
+        working-directory: infrastructure/environments/${{ inputs.environment }}
+
+  apply-db-migration:
+    runs-on: ubuntu-latest
+    needs: provision-infrastructure
+    if: failure() == false && cancelled() == false && inputs.deployMigrations == true
+    environment: ${{ inputs.environment }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run Migration
+      uses: ./.github/actions/dotnet-ef-migration-run
+      with:
+        working-directory: .
+        migration-name: ef-bundle
+        client-id: ${{ vars.AZURE_CLIENT_ID }}
+        subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        tenant-id: ${{ vars.AZURE_TENANT_ID }}
+        resource-group: rg-joyjourney-${{ inputs.environment }}
+        pgsql-server: psql-joyjourney-${{ inputs.environment }}
+        pgsql-database: joyjourney
+        pg-admin: ag-joyjourney-pg-admins-${{ inputs.environment }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [automation_inputs, apply-db-migration]
+    if: failure() == false && cancelled() == false && inputs.deployContainers == true
+    environment: ${{ inputs.environment }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Deploy applications
+      uses: ./.github/actions/dotnet-deploy-k8s
+      timeout-minutes: 10
+      with:
+        image-names: |
+          api
+          mepc-consumer
+          retina-consumer
+        image-tag: sha-${{ github.sha }}
+        kubernetes-cluster-name: ${{ needs.automation_inputs.outputs.k8s_cluster_name }}
+        kubernetes-namespace: joyjourney-${{ inputs.environment }}
+        kubernetes-template-folder: "kubernetes/overlays/${{ inputs.environment }}"
+        vault-role-id: ${{ secrets.HASHICORP_VAULT_ROLE_ID }}
+        vault-role-secret: ${{ secrets.HASHICORP_VAULT_ROLE_SECRET_ID }}
+        ghcr-pull-token: ${{ secrets.GHCR_PULL_TOKEN }}
+        watch-status-of-deployment: deployment/api-deployment
