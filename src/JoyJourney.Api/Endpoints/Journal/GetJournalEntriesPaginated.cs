@@ -5,7 +5,7 @@ using JoyJourney.Shared.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
-public record GetJournalEntriesPaginatedRequest(int PageNumber, int PageSize);
+public record GetJournalEntriesPaginatedRequest(int PageNumber = 1, int PageSize = 10);
 
 public record GetJournalEntriesPaginatedResponse(
     int TotalItems,

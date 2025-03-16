@@ -54,12 +54,12 @@ public static class ServiceCollectionExtensions
     public static NpgsqlDataSource CreateNpgsqlDataSource(string? connectionString)
     {
         return new NpgsqlDataSourceBuilder(connectionString)
-            .UsePeriodicPasswordProvider(async (builder, ct) =>
-            {
-                var accessToken = await _azureCredentials.GetTokenAsync(_ossrdbmsTokenRequest, ct);
-                return accessToken.Token;
-            }, TimeSpan.FromMinutes(55), TimeSpan.FromSeconds(5))
-            .EnableDynamicJson()
+            //.UsePeriodicPasswordProvider(async (builder, ct) =>
+            //{
+            //    var accessToken = await _azureCredentials.GetTokenAsync(_ossrdbmsTokenRequest, ct);
+            //    return accessToken.Token;
+            //}, TimeSpan.FromMinutes(55), TimeSpan.FromSeconds(5))
+            //.EnableDynamicJson()
             .Build();
     }
 }
