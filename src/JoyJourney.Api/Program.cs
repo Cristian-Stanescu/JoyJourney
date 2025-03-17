@@ -15,8 +15,8 @@ builder.Services.AddProblemDetails();
 builder.Services.AddJoyJourneyServices(builder.Configuration);
 builder.Services.AddJoyJourneyHealthChecks();
 
-builder.Services.AddAADPostgresDbContext<JoyJourneyContext>(
-    builder.Configuration.GetConnectionString("JoyJourney"));
+//builder.Services.AddAADPostgresDbContext<JoyJourneyContext>(
+//    builder.Configuration.GetConnectionString("JoyJourney"));
 
 //builder.Services.AddAuthentication()
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
