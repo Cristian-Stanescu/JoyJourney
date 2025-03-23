@@ -1,6 +1,6 @@
 ﻿using JoyJourney.Data.Entities;
 
-namespace JoyJourney.Api.Endpoints.Journal;
+namespace JoyJourney.Shared.Models;
 
 public record JournalEntryDto(string Title, DateTime CreatedAt)
 {

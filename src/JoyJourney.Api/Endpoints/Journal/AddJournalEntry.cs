@@ -1,4 +1,5 @@
 ﻿using JoyJourney.Data;
+using JoyJourney.Shared.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
