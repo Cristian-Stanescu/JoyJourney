@@ -1,17 +1,14 @@
-﻿namespace JoyJourney.Api.Endpoints.Journal;
-
-using System.Threading.Tasks;
-using JoyJourney.Data;
-using JoyJourney.Shared.Models;
-using Microsoft.AspNetCore.Http;
+﻿using JoyJourney.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+
+namespace JoyJourney.Api.Endpoints.Journal;
 
 public class AddJournalEntry
 {
     public static async Task<Ok<Guid>> Handle(
         [FromBody] JournalEntryDto journalEntryDto,
-        JoyJourneyContext context, CancellationToken ct)
+        JoyJourneyDbContext context, CancellationToken ct)
     {
         var journalEntry = journalEntryDto.MapToDomain();
         await context.JournalEntries.AddAsync(journalEntry, ct);

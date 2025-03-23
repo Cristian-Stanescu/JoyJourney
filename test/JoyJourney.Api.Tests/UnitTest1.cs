@@ -1,7 +1,7 @@
-﻿namespace JoyJourney.Api.Tests;
-
+﻿
 using Xunit;
 
+namespace JoyJourney.Api.Tests;
 public class UnitTest1
 {
     [Fact]

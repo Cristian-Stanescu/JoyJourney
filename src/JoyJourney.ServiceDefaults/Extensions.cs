@@ -46,6 +46,7 @@ public static class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                        .AddHttpClientInstrumentation()
                        //.AddProcessInstrumentation()
+                       //.AddMeter("Experimental.Microsoft.Extensions.AI")
                        .AddRuntimeInstrumentation();
             })
             .WithTracing(tracing =>
@@ -57,7 +58,9 @@ public static class Extensions
                 }
 
                 tracing.AddAspNetCoreInstrumentation()
+                       .AddHttpClientInstrumentation()
                        //.AddGrpcClientInstrumentation()
+                       //.AddSource("Experimental.Microsoft.Extensions.AI")
                        .AddHttpClientInstrumentation();
             });
 
@@ -105,14 +108,17 @@ public static class Extensions
         // Uncomment the following line to enable the Prometheus endpoint (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)
         // app.MapPrometheusScrapingEndpoint();
 
-        // All health checks must pass for app to be considered ready to accept traffic after starting
-        app.MapHealthChecks("/health");
-
-        // Only health checks tagged with the "live" tag must pass for app to be considered alive
-        app.MapHealthChecks("/alive", new HealthCheckOptions
+        if (app.Environment.IsDevelopment())
         {
-            Predicate = r => r.Tags.Contains("live")
-        });
+            // All health checks must pass for app to be considered ready to accept traffic after starting
+            app.MapHealthChecks("/health");
+
+            // Only health checks tagged with the "live" tag must pass for app to be considered alive
+            app.MapHealthChecks("/alive", new HealthCheckOptions
+            {
+                Predicate = r => r.Tags.Contains("live")
+            });
+        }
 
         return app;
     }

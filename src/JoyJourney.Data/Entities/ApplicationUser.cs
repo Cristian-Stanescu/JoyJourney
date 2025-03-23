@@ -1,8 +1,9 @@
-﻿namespace JoyJourney.Data.Entities;
+﻿using Microsoft.AspNetCore.Identity;
 
-public class ApplicationUser
+namespace JoyJourney.Data.Entities;
+
+public class ApplicationUser : IdentityUser<Guid>
 {
-    public Guid Id { get; set; }
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public int BirthYear { get; set; } = default!;

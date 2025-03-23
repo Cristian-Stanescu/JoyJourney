@@ -1,39 +1,37 @@
-﻿using System.Text.Json.Serialization;
-using JoyJourney.Api;
-using JoyJourney.Api.Endpoints;
-using JoyJourney.Data;
+﻿using JoyJourney.Data;
+using JoyJourney.Data.Entities;
 using JoyJourney.ServiceDefaults;
-using JoyJourney.Services;
+using Microsoft.AspNetCore.Identity;
+using JoyJourney.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add service defaults & Aspire components.
 builder.AddServiceDefaults();
 
-// Add services to the container.
-builder.Services.AddProblemDetails();
-builder.Services.AddJoyJourneyServices(builder.Configuration);
-builder.Services.AddJoyJourneyHealthChecks();
+builder.Services.AddControllersWithViews();
 
-//builder.Services.AddAADPostgresDbContext<JoyJourneyContext>(
-//    builder.Configuration.GetConnectionString("JoyJourney"));
+builder.AddNpgsqlDbContext<JoyJourneyDbContext>("joy_journey_db");
 
-//builder.Services.AddAuthentication()
-//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+// Apply database migration automatically. Note that this approach is not
+// recommended for production scenarios. Consider generating SQL scripts from
+// migrations instead.
+builder.Services.AddMigration<JoyJourneyDbContext, JoyJourneySeed>();
 
-//builder.Services.AddAuthorization();
-builder.Services.AddJoyJourneySwagger(builder.Configuration);
-builder.Services.ConfigureHttpJsonOptions(e => e.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<JoyJourneyDbContext>()
+        .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-app.UseExceptionHandler();
+app.MapDefaultEndpoints();
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseStaticFiles();
 
-app.UseJoyJourneySwagger();
-app.UseJournalEndpoints();
+// This cookie policy fixes login issues with Chrome 80+ using HTTP
+app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapDefaultControllerRoute();
 
 app.Run();

@@ -1,8 +1,6 @@
-﻿namespace JoyJourney.Api;
+﻿using Microsoft.OpenApi.Models;
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.OpenApi.Models;
-
+namespace JoyJourney.Api;
 public static class ProgramExtensions
 {
 

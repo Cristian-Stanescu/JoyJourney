@@ -1,7 +1,7 @@
-﻿namespace JoyJourney.Api.Endpoints;
-
+﻿
 using JoyJourney.Api.Endpoints.Journal;
 
+namespace JoyJourney.Api.Endpoints;
 public static class EndpointExtensions
 {
     public static WebApplication UseJournalEndpoints(this WebApplication app)

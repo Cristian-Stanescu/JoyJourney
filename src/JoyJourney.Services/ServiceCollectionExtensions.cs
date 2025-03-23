@@ -1,5 +1,4 @@
-﻿namespace JoyJourney.Services;
-
+﻿
 using Azure.Core;
 using Azure.Identity;
 using JoyJourney.Data;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Client;
 using Npgsql;
 
+namespace JoyJourney.Services;
 public static class ServiceCollectionExtensions
 {
     private static readonly DefaultAzureCredential _azureCredentials = AppAzureCredential.Instance;
@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
     public static IHealthChecksBuilder AddJoyJourneyHealthChecks(this IServiceCollection services)
     {
         return services.AddHealthChecks()
-            .AddDbContextCheck<JoyJourneyContext>();
+            .AddDbContextCheck<JoyJourneyDbContext>();
     }
 
     public static IServiceCollection AddAADPostgresDbContext<TContext>(this IServiceCollection services, string? connectionString)

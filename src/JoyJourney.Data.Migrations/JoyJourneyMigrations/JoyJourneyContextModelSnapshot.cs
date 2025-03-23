@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace JoyJourney.Data.Migrations.Migrations
 {
-    [DbContext(typeof(JoyJourneyContext))]
+    [DbContext(typeof(JoyJourneyDbContext))]
     partial class JoyJourneyContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace JoyJourney.Data.Migrations.Migrations
 {
-    [DbContext(typeof(JoyJourneyContext))]
+    [DbContext(typeof(JoyJourneyDbContext))]
     [Migration("20240813081009_Initial")]
     partial class Initial
     {
