@@ -1,4 +1,5 @@
-﻿using JoyJourney.Api;
+﻿namespace JoyJourney.Api;
+
 using JoyJourney.Data;
 using JoyJourney.Data.Entities;
 using Microsoft.AspNetCore.Identity;

@@ -1,6 +1,6 @@
-﻿using JoyJourney.Data.Entities;
+﻿namespace JoyJourney.Shared.Models;
 
-namespace JoyJourney.Shared.Models;
+using JoyJourney.Data.Entities;
 
 public record JournalEntryDto(string Title, DateTime CreatedAt)
 {

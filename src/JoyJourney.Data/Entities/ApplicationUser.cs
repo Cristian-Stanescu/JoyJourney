@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿namespace JoyJourney.Data.Entities;
 
-namespace JoyJourney.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 
 public class ApplicationUser : IdentityUser<Guid>
 {

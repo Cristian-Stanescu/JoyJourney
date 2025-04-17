@@ -1,9 +1,9 @@
-﻿using JoyJourney.Data;
+﻿namespace JoyJourney.Api.Endpoints.Journal;
+
+using JoyJourney.Data;
 using JoyJourney.Shared.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-
-namespace JoyJourney.Api.Endpoints.Journal;
 
 public record GetJournalEntriesPaginatedRequest(int PageNumber = 1, int PageSize = 10);
 

@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+﻿namespace JoyJourney.Api;
 
-namespace JoyJourney.Api;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 internal static class MigrateDbContextExtensions
 {

@@ -19,7 +19,7 @@ csharp_qualified_using_at_nested_scope = true
 
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true
-csharp_using_directive_placement = outside_namespace:suggestion
+csharp_using_directive_placement = inside_namespace:suggestion
 
 # Instance fields are camelCase and start with _
 dotnet_naming_rule.instance_fields_should_be_camel_case.severity = suggestion

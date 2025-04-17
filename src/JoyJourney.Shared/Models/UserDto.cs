@@ -1,6 +1,6 @@
-﻿using JoyJourney.Data.Entities;
+﻿namespace JoyJourney.Shared.Models;
 
-namespace JoyJourney.Shared.Models;
+using JoyJourney.Data.Entities;
 
 public record UserDto(string FirstName, string LastName, string UserName)
 {

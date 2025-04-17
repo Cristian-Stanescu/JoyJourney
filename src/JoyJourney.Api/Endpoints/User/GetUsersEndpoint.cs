@@ -1,9 +1,9 @@
-﻿using JoyJourney.Data;
+﻿namespace JoyJourney.Api.Endpoints.User;
+
+using JoyJourney.Data;
 using JoyJourney.Shared.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-
-namespace JoyJourney.Api.Endpoints.User;
 
 public record GetUsersPaginatedRequest(int PageNumber = 1, int PageSize = 10);
 

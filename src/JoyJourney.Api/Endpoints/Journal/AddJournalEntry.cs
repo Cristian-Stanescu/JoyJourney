@@ -1,9 +1,9 @@
-﻿using JoyJourney.Data;
+﻿namespace JoyJourney.Api.Endpoints.Journal;
+
+using JoyJourney.Data;
 using JoyJourney.Shared.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-
-namespace JoyJourney.Api.Endpoints.Journal;
 
 public class AddJournalEntry
 {

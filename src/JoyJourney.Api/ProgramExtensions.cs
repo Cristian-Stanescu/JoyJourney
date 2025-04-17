@@ -1,6 +1,7 @@
-﻿using Microsoft.OpenApi.Models;
+﻿namespace JoyJourney.Api;
 
-namespace JoyJourney.Api;
+using Microsoft.OpenApi.Models;
+
 public static class ProgramExtensions
 {
 

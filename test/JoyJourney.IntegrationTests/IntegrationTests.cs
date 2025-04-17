@@ -1,4 +1,5 @@
-﻿
+﻿namespace JoyJourney.IntegrationTests;
+
 using System.Net;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
@@ -6,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
 
-namespace JoyJourney.IntegrationTests;
 public class IntegrationTests
 {
     [Fact]
