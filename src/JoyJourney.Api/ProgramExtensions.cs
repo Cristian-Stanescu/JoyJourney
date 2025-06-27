@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 public static class ProgramExtensions
 {
 
-    public static void AddJoyJourneySwagger(this IServiceCollection services, IConfiguration configuration)
+    public static void AddOpenApi(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSwaggerGen(options =>
         {
@@ -60,7 +60,7 @@ public static class ProgramExtensions
         });
     }
 
-    public static WebApplication UseJoyJourneySwagger(this WebApplication app)
+    public static WebApplication UseOpenApi(this WebApplication app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(options =>

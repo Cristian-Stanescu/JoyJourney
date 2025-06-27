@@ -31,17 +31,20 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireLowercase = true;
 });
 
+builder.Services.AddOpenApi(builder.Configuration);
+
 var app = builder.Build();
 
 // Apply migrations on startup
-await DatabaseMigrationService.ApplyMigrationsAsync(app.Services);
+//await DatabaseMigrationService.ApplyMigrationsAsync(app.Services);
 
 app.MapDefaultEndpoints();
 
-app.UseStaticFiles();
 
 // This cookie policy fixes login issues with Chrome 80+ using HTTP
 app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
+
+app.UseOpenApi();
 app.UseRouting();
 app.UseAuthorization();
 
