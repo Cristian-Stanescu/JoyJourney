@@ -1,8 +1,9 @@
-﻿using JoyJourney.Data;
+﻿using JoyJourney.Api;
+using JoyJourney.Data;
 using JoyJourney.Data.Entities;
 using JoyJourney.ServiceDefaults;
 using Microsoft.AspNetCore.Identity;
-using JoyJourney.Api;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,18 +11,30 @@ builder.AddServiceDefaults();
 
 builder.Services.AddControllersWithViews();
 
-builder.AddNpgsqlDbContext<JoyJourneyDbContext>("joy_journey_db");
+builder.Services.AddDbContext<JoyJourneyDbContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("JoyJourney"),
+        npgsqlOptions => npgsqlOptions.MigrationsAssembly("JoyJourney.Data.Migrations"));
+});
 
-// Apply database migration automatically. Note that this approach is not
-// recommended for production scenarios. Consider generating SQL scripts from
-// migrations instead.
-builder.Services.AddMigration<JoyJourneyDbContext, JoyJourneySeed>();
-
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
         .AddEntityFrameworkStores<JoyJourneyDbContext>()
         .AddDefaultTokenProviders();
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+});
+
 var app = builder.Build();
+
+// Apply migrations on startup
+await DatabaseMigrationService.ApplyMigrationsAsync(app.Services);
 
 app.MapDefaultEndpoints();
 

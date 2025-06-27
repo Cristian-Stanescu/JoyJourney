@@ -9,11 +9,12 @@ public class JoyJourneyContextFactory : IDesignTimeDbContextFactory<JoyJourneyDb
     public JoyJourneyDbContext CreateDbContext(string[] args)
     {
         var configuration = new ConfigurationBuilder()
+            .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.Development.json"), true)
             .AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), true)
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<JoyJourneyDbContext>()
-            .UseNpgsql(configuration.GetConnectionString("JoyJourney"), sql =>
+            .UseNpgsql(configuration.GetConnectionString("joyjourneyDb"), sql =>
             {
                 sql.MigrationsHistoryTable("__efmigrations_joy_journey");
                 sql.MigrationsAssembly(typeof(JoyJourneyContextFactory).Assembly.FullName);

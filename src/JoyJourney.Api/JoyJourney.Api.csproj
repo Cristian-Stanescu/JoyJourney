@@ -8,6 +8,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<ProjectReference Include="..\JoyJourney.Data.Migrations\JoyJourney.Data.Migrations.csproj" />
 		<ProjectReference Include="..\JoyJourney.Services\JoyJourney.Services.csproj" />
 		<ProjectReference Include="..\JoyJourney.ServiceDefaults\JoyJourney.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\JoyJourney.Shared\JoyJourney.Shared.csproj" />
