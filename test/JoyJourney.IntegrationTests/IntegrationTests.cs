@@ -26,7 +26,7 @@ public class IntegrationTests
 
         // Act
         var httpClient = app.CreateHttpClient("web-frontend");
-        await resourceNotificationService.WaitForResourceAsync("web-frontend", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
+        await resourceNotificationService.WaitForResourceAsync("web-frontend", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(3));
         var response = await httpClient.GetAsync("/");
 
         // Assert
@@ -49,8 +49,8 @@ public class IntegrationTests
 
         // Act
         var httpClient = app.CreateHttpClient("api-service");
-        await resourceNotificationService.WaitForResourceAsync("api-service", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
-        var response = await httpClient.GetAsync("swagger/v1/swagger.json");
+        await resourceNotificationService.WaitForResourceAsync("api-service", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(3));
+        var response = await httpClient.GetAsync("/swagger/v1/swagger.json");
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
