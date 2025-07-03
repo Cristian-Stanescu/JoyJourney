@@ -38,12 +38,12 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-
 // This cookie policy fixes login issues with Chrome 80+ using HTTP
 app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 
 app.UseOpenApi();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseJoyJournalEndpoints();
