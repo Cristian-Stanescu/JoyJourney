@@ -35,9 +35,6 @@ builder.Services.AddOpenApi(builder.Configuration);
 
 var app = builder.Build();
 
-// Apply migrations on startup
-//await DatabaseMigrationService.ApplyMigrationsAsync(app.Services);
-
 app.MapDefaultEndpoints();
 
 
