@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace JoyJourney.Data.Migrations.Migrations
+namespace JoyJourney.Migrations.Migrations
 {
     [DbContext(typeof(JoyJourneyDbContext))]
-    [Migration("20250627181807_SeedUsers")]
-    partial class SeedUsers
+    [Migration("20250703115635_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

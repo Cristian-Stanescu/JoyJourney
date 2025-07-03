@@ -31,8 +31,7 @@ else
             @foreach (var entry in journalEntries)
             {
                 <tr>
-                    <td>@entry.Title</td>
-                    <td>@entry.CreatedAt.ToShortDateString()</td>
+                    <td>@entry.Content</td>
                 </tr>
             }
         </tbody>

@@ -1,11 +1,11 @@
+﻿namespace JoyJourney.Migrations;
+
 using JoyJourney.Data;
-using JoyJourney.Data.Migrations;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
-namespace JoyJourney.Data.Migrations;
 
 public class Program
 {
@@ -22,7 +22,7 @@ public class Program
 
         // Add the DbContext using the factory
         builder.Services.AddSingleton<JoyJourneyContextFactory>();
-        builder.Services.AddScoped<JoyJourneyDbContext>(serviceProvider =>
+        builder.Services.AddScoped(serviceProvider =>
         {
             var factory = serviceProvider.GetRequiredService<JoyJourneyContextFactory>();
             return factory.CreateDbContext(args);

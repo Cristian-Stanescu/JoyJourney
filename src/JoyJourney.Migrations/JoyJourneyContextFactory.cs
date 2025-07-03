@@ -1,4 +1,6 @@
-﻿namespace JoyJourney.Data.Migrations;
+﻿namespace JoyJourney.Migrations;
+
+using JoyJourney.Data;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;

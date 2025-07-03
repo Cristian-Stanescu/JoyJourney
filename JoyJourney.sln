@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2-Data", "2-Data", "{4158F8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoyJourney.Data", "src\JoyJourney.Data\JoyJourney.Data.csproj", "{0D7F6CE2-09A9-4533-9D71-963EDF343E89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyJourney.Migrations", "src\JoyJourney.Migrations\JoyJourney.Migrations.csproj", "{5FAD31F4-7129-5140-E8A7-49050B1903C7}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3-Services", "3-Services", "{6E2D3970-79EB-47F3-9EA4-A9C4E507CE0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyJourney.Services", "src\JoyJourney.Services\JoyJourney.Services.csproj", "{CE46AA45-8829-40D4-8145-E598F8E28696}"
@@ -39,8 +41,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoyJourney.AppHost", "src\JoyJourney.AppHost\JoyJourney.AppHost.csproj", "{5851AAEC-F267-4074-AEEE-37E36F90C97A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyJourney.Shared", "src\JoyJourney.Shared\JoyJourney.Shared.csproj", "{8EA97373-8971-1417-9BA1-53CBEC11ADA8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyJourney.Data.Migrations", "src\JoyJourney.Data.Migrations\JoyJourney.Data.Migrations.csproj", "{5FAD31F4-7129-5140-E8A7-49050B1903C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

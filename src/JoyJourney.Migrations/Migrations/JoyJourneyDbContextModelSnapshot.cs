@@ -8,10 +8,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace JoyJourney.Data.Migrations.Migrations
+namespace JoyJourney.Migrations.Migrations
 {
     [DbContext(typeof(JoyJourneyDbContext))]
-    partial class JoyJourneyContextModelSnapshot : ModelSnapshot
+    partial class JoyJourneyDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

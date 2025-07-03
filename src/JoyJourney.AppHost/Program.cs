@@ -2,7 +2,7 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 var postgres = builder.AddPostgres("postgres", port: 5432)
-    .WithDataVolume("jpostgresdata")
+    .WithDataVolume("postgresdata")
     .WithLifetime(ContainerLifetime.Persistent);
 var joyjourneyDb = postgres.AddDatabase("joyjourney-db", "joy_journey");
 

@@ -2,20 +2,21 @@
 
 using JoyJourney.Data.Entities;
 
-public record JournalEntryDto(string Title, DateTime CreatedAt)
+public record JournalEntryDto(string Content)
 {
     public JournalEntry MapToDomain()
     {
         return new JournalEntry
         {
-            Title = Title,
-            CreatedAt = CreatedAt,
-            UpdatedAt = CreatedAt
+            Title = $"{DateTime.UtcNow:M}",
+            Content = Content,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
     }
 
     public static JournalEntryDto FromDomain(JournalEntry journalEntry)
     {
-        return new JournalEntryDto(journalEntry.Title, journalEntry.CreatedAt);
+        return new JournalEntryDto(journalEntry.Content);
     }
 }
