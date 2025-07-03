@@ -26,6 +26,6 @@ public class GetUsersPaginated
             .Select(e => UserDto.FromDomain(e))
             .ToListAsync(ct);
 
-        return TypedResults.Ok(new GetUsersPaginatedResponse(totalItems, []));
+        return TypedResults.Ok(new GetUsersPaginatedResponse(totalItems, items));
     }
 }

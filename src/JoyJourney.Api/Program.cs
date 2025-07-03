@@ -1,4 +1,5 @@
 ﻿using JoyJourney.Api;
+using JoyJourney.Api.Endpoints;
 using JoyJourney.Data;
 using JoyJourney.Data.Entities;
 using JoyJourney.ServiceDefaults;
@@ -45,6 +46,6 @@ app.UseOpenApi();
 app.UseRouting();
 app.UseAuthorization();
 
-app.MapDefaultControllerRoute();
+app.UseJoyJournalEndpoints();
 
 app.Run();
