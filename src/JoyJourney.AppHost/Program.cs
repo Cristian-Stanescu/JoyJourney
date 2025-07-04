@@ -1,8 +1,7 @@
-﻿using Aspire.Hosting;
-
-var builder = DistributedApplication.CreateBuilder(args);
+﻿var builder = DistributedApplication.CreateBuilder(args);
 var postgres = builder.AddPostgres("postgres", port: 5432)
-    .WithDataVolume("postgresdata")
+    //.WithHealthCheck("db-health")
+    .WithDataVolume("joyjourney-data")
     .WithLifetime(ContainerLifetime.Persistent);
 var joyjourneyDb = postgres.AddDatabase("joyjourney-db", "joy_journey");
 
