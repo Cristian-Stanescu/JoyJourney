@@ -10,8 +10,6 @@
 
 <h1>Journal</h1>
 
-<p>This component demonstrates showing data loaded from a backend API service.</p>
-
 @if (journalEntries == null)
 {
     <p><em>Loading...</em></p>
@@ -19,14 +17,6 @@
 else
 {
     <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
         <tbody>
             @foreach (var entry in journalEntries)
             {
