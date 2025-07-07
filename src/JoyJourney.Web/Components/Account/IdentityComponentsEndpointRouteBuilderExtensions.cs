@@ -21,7 +21,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         var accountGroup = endpoints.MapGroup("/account");
 
-        accountGroup.MapPost("/PerformExternalLogin", (
+        accountGroup.MapPost("/perform-external-login", (
             HttpContext context,
             [FromServices] SignInManager<ApplicationUser> signInManager,
             [FromForm] string provider,
