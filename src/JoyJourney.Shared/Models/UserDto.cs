@@ -1,7 +1,7 @@
-﻿namespace JoyJourney.Shared.Models;
-
+﻿
 using JoyJourney.Data.Entities;
 
+namespace JoyJourney.Shared.Models;
 public record UserDto(string FirstName, string LastName, string UserName)
 {
     public ApplicationUser MapToDomain()

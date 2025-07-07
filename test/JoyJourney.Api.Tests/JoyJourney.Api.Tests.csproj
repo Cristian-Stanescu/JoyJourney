@@ -20,7 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\JoyJourney.Api\JoyJourney.Api.csproj" />
+	  <ProjectReference Include="..\..\src\JoyJourney.Web\JoyJourney.Web.csproj" />
 	</ItemGroup>
 
 </Project>

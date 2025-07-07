@@ -2,11 +2,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JoyJourney.ServiceDefaults\JoyJourney.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\JoyJourney.Services\JoyJourney.Services.csproj" />
     <ProjectReference Include="..\JoyJourney.Shared\JoyJourney.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+		<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.Identity.Web" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
 </Project>

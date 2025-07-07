@@ -1,8 +1,7 @@
-﻿namespace JoyJourney.Api.Endpoints;
+﻿using JoyJourney.Web.Endpoints.Journal;
+using JoyJourney.Web.Endpoints.User;
 
-using JoyJourney.Api.Endpoints.Journal;
-using JoyJourney.Api.Endpoints.User;
-
+namespace JoyJourney.Web.Endpoints;
 public static class EndpointsRegistrations
 {
     public static WebApplication UseJoyJournalEndpoints(this WebApplication app)

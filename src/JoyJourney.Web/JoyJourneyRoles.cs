@@ -1,4 +1,4 @@
-﻿namespace JoyJourney.Api;
+﻿namespace JoyJourney.Web;
 
 public static class JoyJourneyRoles
 {

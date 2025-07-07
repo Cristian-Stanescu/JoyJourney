@@ -1,7 +1,7 @@
-﻿namespace JoyJourney.Services;
-
+﻿
 using Azure.Identity;
 
+namespace JoyJourney.Services;
 public class AppAzureCredential : DefaultAzureCredential
 {
     private static readonly AppAzureCredential _instance = new();

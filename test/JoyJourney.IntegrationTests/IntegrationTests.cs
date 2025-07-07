@@ -1,5 +1,4 @@
-﻿namespace JoyJourney.IntegrationTests;
-
+﻿
 using System.Net;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
 
+namespace JoyJourney.IntegrationTests;
 public class IntegrationTests
 {
     [Fact]
@@ -31,26 +31,8 @@ public class IntegrationTests
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-    }
 
-    [Fact]
-    public async Task GetApiSwaggerReturnsOkStatusCode()
-    {
-        // Arrange
-        var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.JoyJourney_AppHost>();
-        appHost.Services.ConfigureHttpClientDefaults(clientBuilder =>
-        {
-            clientBuilder.AddStandardResilienceHandler();
-        });
-
-        await using var app = await appHost.BuildAsync();
-        var resourceNotificationService = app.Services.GetRequiredService<ResourceNotificationService>();
-        await app.StartAsync();
-
-        // Act
-        var httpClient = app.CreateHttpClient("api-service");
-        await resourceNotificationService.WaitForResourceAsync("api-service", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(3));
-        var response = await httpClient.GetAsync("/swagger/v1/swagger.json");
+        response = await httpClient.GetAsync("/swagger/v1/swagger.json");
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.OK);

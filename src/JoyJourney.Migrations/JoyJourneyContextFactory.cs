@@ -1,11 +1,11 @@
-﻿namespace JoyJourney.Migrations;
-
+﻿
 using JoyJourney.Data;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
+namespace JoyJourney.Migrations;
 public class JoyJourneyContextFactory : IDesignTimeDbContextFactory<JoyJourneyDbContext>
 {
     public JoyJourneyDbContext CreateDbContext(string[] args)

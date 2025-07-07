@@ -1,8 +1,8 @@
-﻿namespace JoyJourney.Web;
-
+﻿
 using System.Net.Http.Headers;
 using JoyJourney.Shared.Models;
 
+namespace JoyJourney.Web;
 public class JournalApiClient : HttpClient
 {
     public JournalApiClient(HttpClient httpClient)

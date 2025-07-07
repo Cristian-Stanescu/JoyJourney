@@ -1,7 +1,7 @@
-﻿namespace JoyJourney.Shared.Models;
-
+﻿
 using JoyJourney.Data.Entities;
 
+namespace JoyJourney.Shared.Models;
 public record JournalEntryDto(string Content)
 {
     public JournalEntry MapToDomain()
