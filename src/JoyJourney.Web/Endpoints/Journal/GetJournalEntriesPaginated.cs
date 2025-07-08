@@ -1,5 +1,5 @@
 ﻿using JoyJourney.Data;
-using JoyJourney.Shared.Models;
+using JoyJourney.Web.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 

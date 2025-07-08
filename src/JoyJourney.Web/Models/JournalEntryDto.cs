@@ -1,6 +1,6 @@
 ﻿using JoyJourney.Data.Entities;
 
-namespace JoyJourney.Shared.Models;
+namespace JoyJourney.Web.Models;
 
 public record JournalEntryDto(string Content)
 {
