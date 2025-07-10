@@ -25,8 +25,8 @@ public class IntegrationTests
         await app.StartAsync();
 
         // Act
-        var httpClient = app.CreateHttpClient("web-frontend");
-        await resourceNotificationService.WaitForResourceAsync("web-frontend", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(3));
+        var httpClient = app.CreateHttpClient("webapp");
+        await resourceNotificationService.WaitForResourceAsync("webapp", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(3));
         var response = await httpClient.GetAsync("/");
 
         // Assert

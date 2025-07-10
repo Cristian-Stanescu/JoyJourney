@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoyJourney.Web", "src\JoyJo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JoyJourney.AppHost", "src\JoyJourney.AppHost\JoyJourney.AppHost.csproj", "{5851AAEC-F267-4074-AEEE-37E36F90C97A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyJourney.WebApp", "src\JoyJourney.WebApp\JoyJourney.WebApp.csproj", "{D16FF504-546B-47AE-9912-3C8AC2088F11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{5851AAEC-F267-4074-AEEE-37E36F90C97A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5851AAEC-F267-4074-AEEE-37E36F90C97A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5851AAEC-F267-4074-AEEE-37E36F90C97A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D16FF504-546B-47AE-9912-3C8AC2088F11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D16FF504-546B-47AE-9912-3C8AC2088F11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D16FF504-546B-47AE-9912-3C8AC2088F11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D16FF504-546B-47AE-9912-3C8AC2088F11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{CE46AA45-8829-40D4-8145-E598F8E28696} = {6E2D3970-79EB-47F3-9EA4-A9C4E507CE0C}
 		{6DC7799D-DE82-4723-B529-1ED7005004FF} = {3CB70587-95FF-4920-ABB1-E50C5A428068}
 		{F31DD1F9-783F-4CA8-A369-AF5190B51FEF} = {3CB70587-95FF-4920-ABB1-E50C5A428068}
+		{D16FF504-546B-47AE-9912-3C8AC2088F11} = {3CB70587-95FF-4920-ABB1-E50C5A428068}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {24DAB5FC-A580-4DB2-AB6E-113B44C3F62D}

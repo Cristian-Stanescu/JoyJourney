@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\JoyJourney.WebApp\JoyJourney.WebApp.csproj" />
 		<ProjectReference Include="..\JoyJourney.Web\JoyJourney.Web.csproj" />
 	</ItemGroup>
 

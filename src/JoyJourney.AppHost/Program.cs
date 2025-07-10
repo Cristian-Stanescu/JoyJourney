@@ -12,4 +12,9 @@ builder.AddProject<Projects.JoyJourney_Web>("web-frontend")
     .WithReference(cache)
     .WithReference(joyjourneyDb).WaitFor(joyjourneyDb);
 
+builder.AddProject<Projects.JoyJourney_WebApp>("webapp")
+    .WithExternalHttpEndpoints()
+    .WithReference(cache)
+    .WithReference(joyjourneyDb).WaitFor(joyjourneyDb);
+
 builder.Build().Run();
