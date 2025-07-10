@@ -1,0 +1,113 @@
+﻿
+.gratitude-section {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 300;
+    color: #4a5568;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+}
+
+.express-gratitude-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+}
+
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.gratitude-input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    background: rgba(255, 255, 255, 0.8);
+    transition: border-color 0.2s ease;
+}
+
+    .gratitude-input:focus {
+        outline: none;
+        border-color: #81c7d4;
+        box-shadow: 0 0 0 3px rgba(129, 199, 212, 0.1);
+    }
+
+.submit-btn {
+    align-self: center;
+    background: linear-gradient(135deg, #81c7d4, #a8e6cf);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(129, 199, 212, 0.3);
+}
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(129, 199, 212, 0.4);
+    }
+
+.inspiration-section {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.inspiration-title {
+    font-size: 2rem;
+    font-weight: 400;
+    color: #4a5568;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+}
+
+.inspiration-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #6b7280;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.main-title {
+    font-size: 2.5rem;
+}
+
+.express-gratitude-card {
+    padding: 1.5rem;
+}
+
+.inspiration-title {
+    font-size: 1.5rem;
+}
+
+.home-container {
+    padding: 1rem;
+}
